@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { kv } from "@vercel/kv";
 // import { createClient } from "@vercel/kv";
+import { createClient } from "redis";
 
-const Admin = () => {
+const Admin = async () => {
   const post = {
     id: "1",
     user: "jerome",
@@ -13,6 +13,15 @@ const Admin = () => {
     body: "So here's my first post.  I hope this works.",
   };
   const options = { url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN };
+  //   const client = createClient({
+  //     url: `rediss://default:${process.env.UPSTASH_PASSWORD}@${process.env.UPSTASH_URL}:6379`,
+  //   });
+  //   client.on("error", function (err) {
+  //     throw err;
+  //   });
+  //   await client.connect();
+  //   client.hSet(`blog-post:${post.id}`, post);
+  //   client.sAdd(`user-posts:${post.user}`, post.id);
   //   console.log(options);
   //   const Client = createClient(options);
   //   Client.hset(`blog-post:${post.id}`, post);
