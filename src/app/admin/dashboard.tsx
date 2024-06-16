@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { AddPost } from "@/actions/blogpost";
-import type { PostData } from "@/actions/blogpost";
+import type { PostData } from "@/lib/upstash";
 
 const Admin = () => {
   const Post: PostData = {
