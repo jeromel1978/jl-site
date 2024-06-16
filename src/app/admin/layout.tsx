@@ -15,6 +15,7 @@ const AuthLayout = async ({
   children: React.ReactNode;
 }>) => {
   const session = await getServerSession(authOptions);
+  console.log(session);
   return (
     <NextAuthProvider>
       {!!session && children}
