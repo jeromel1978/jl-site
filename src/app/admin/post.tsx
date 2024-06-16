@@ -2,16 +2,30 @@ import { ReactNode } from "react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 // import { createClient } from "@vercel/kv";
-import { createClient } from "redis";
+import { Redis } from "@upstash/redis";
+
+import { AddPost } from "@/actions/blogpost";
+import { PostData } from "@/lib/upstash";
 
 const Admin = async () => {
-  const post = {
+  const Post: PostData = {
     id: "1",
     user: "jerome",
     author: "Jerome",
     title: "First Post - Internal",
     body: "So here's my first post.  I hope this works.",
   };
+  const Post2: PostData = {
+    id: "1",
+    user: "jerome",
+    author: "Jerome",
+    title: "First Post - Internal",
+    body: "So here's my first post.  I hope this works.",
+  };
+  await AddPost(Post);
+  // const client = await Connect();
+  // await client.hset(`blog-post:${post.id}`, post);
+  // await client.sadd(`user-posts:${post.user}`, post.id);
   // const options = { url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN };
   //   const client = createClient({
   //     url: `rediss://default:${process.env.UPSTASH_PASSWORD}@${process.env.UPSTASH_URL}:6379`,

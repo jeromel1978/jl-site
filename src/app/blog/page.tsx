@@ -3,8 +3,8 @@ import { Category, Connect } from "@/lib/upstash";
 
 const Blog = async () => {
   const client = await Connect();
-  const Posts = client.hGetAll(Category.BlogPost);
-  console.log(Posts);
+  const Posts = await client.hgetall(Category.BlogPost);
+  console.log(Category.BlogPost, Posts);
   return <div>Blog</div>;
 };
 export default Blog;

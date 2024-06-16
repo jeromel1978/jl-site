@@ -1,4 +1,12 @@
-import { createClient } from "redis";
+import { Redis } from "@upstash/redis";
+
+export type PostData = {
+  id: string;
+  user: string;
+  author: string;
+  title: string;
+  body: string;
+};
 
 export const Category = {
   BlogPost: "blog-post",
@@ -6,12 +14,10 @@ export const Category = {
 };
 
 export const Connect = async () => {
-  const client = await createClient({
-    url: `rediss://default:${process.env.UPSTASH_PASSWORD}@${process.env.UPSTASH_URL}:6379`,
-  })
-    .on("error", function (err) {
-      throw err;
-    })
-    .connect();
+  // console.log(process.env.UPSTASH_URL, process.env.UPSTASH_PASSWORD);
+  const client = new Redis({
+    url: `rediss://${process.env.UPSTASH_URL}`,
+    token: process.env.UPSTASH_PASSWORD,
+  });
   return client;
 };
