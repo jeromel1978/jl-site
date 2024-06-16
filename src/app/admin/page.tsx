@@ -1,5 +1,13 @@
 import { ReactNode } from "react";
+import Dashboard from "./dashboard";
 
-export default function Admin() {
-  return <div>Admin</div>;
-}
+const Admin = async () => {
+  return (
+    <div>
+      Admin
+      <Dashboard />
+    </div>
+  );
+};
+
+export default Admin;

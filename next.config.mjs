@@ -1,4 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+import Analyzer from "@next/bundle-analyzer";
+const nextConfig = {
+  reactStrictMode: false,
+  swcMinify: true,
+  // experimental: {
+  //   webpackBuildWorker: true,
+  // },
+  // eslint: { ignoreDuringBuilds: true },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "20mb",
+    },
+  },
+};
 
-export default nextConfig;
+const WithAnalyzer = Analyzer({ enabled: process.env.ANALYZE === "true" });
+
+export default WithAnalyzer(nextConfig);
