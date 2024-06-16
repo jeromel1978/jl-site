@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
 
-export default function RootLayout() {
+export default function Root() {
   return <div>Main</div>;
 }
