@@ -12,7 +12,7 @@ const Admin = async () => {
     title: "First Post - Internal",
     body: "So here's my first post.  I hope this works.",
   };
-  const options = { url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN };
+  // const options = { url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN };
   //   const client = createClient({
   //     url: `rediss://default:${process.env.UPSTASH_PASSWORD}@${process.env.UPSTASH_URL}:6379`,
   //   });
