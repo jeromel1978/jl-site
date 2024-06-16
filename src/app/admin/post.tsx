@@ -18,8 +18,8 @@ const Admin = () => {
   //   Client.hset(`blog-post:${post.id}`, post);
   //   Client.sadd(`user-posts:${post.user}`, post.id);
 
-  kv.hset(`blog-post:${post.id}`, post);
-  kv.sadd(`user-posts:${post.user}`, post.id);
+  //   kv.hset(`blog-post:${post.id}`, post);
+  //   kv.sadd(`user-posts:${post.user}`, post.id);
 
   // const posts = await kv.smembers(`user-posts:${post.user}`)
   return <div>Posted</div>;
