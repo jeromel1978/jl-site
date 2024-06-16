@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-import { createClient } from "redis";
 import { Connect, Category } from "@/lib/upstash";
 const Blog = async () => {
   const client = await Connect();
