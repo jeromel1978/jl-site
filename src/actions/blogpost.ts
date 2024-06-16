@@ -3,18 +3,19 @@ import { PostData, Connect, Category } from "@/lib/upstash";
 
 export const AddPost = async (Data: PostData) => {
   const client = await Connect();
-  // const Posts = await client.hgetall(`${Category}`);
-  // const a = await fetch("https://picsum.photos/200/300");
-  // console.log("got", a);
-  console.log("Posting", Category.BlogPost, Data);
-  // const hset = await client.hset(`${Category.BlogPost}`, Data);
   const hset = await client.hset(`${Category.BlogPost}:${Data.id}`, Data);
-  console.log("Assigning to User", hset);
-  await client.sadd(`${Category.BlogUserPost}:${Data.user}`, Data.id);
+  const sadd = await client.sadd(`${Category.BlogUserPost}:${Data.user}`, Data.id);
+  return true;
 };
 
-export const GetPosts = async () => {
+export const GetPosts = async (User: string) => {
   const client = await Connect();
-  const Posts = await client.hgetall(`${Category.BlogPost}`);
+  const PostIndex = await client.smembers(`${Category.BlogUserPost}:${User}`);
+  const Posts: PostData[] = [];
+  for (const Index of PostIndex) {
+    // Post.push( await client.hgetall(`${Category.BlogPost}:${Index}`))
+    const Res = await client.hgetall(`${Category.BlogPost}:${Index}`);
+    Posts.push(Res as PostData);
+  }
   return Posts;
 };
