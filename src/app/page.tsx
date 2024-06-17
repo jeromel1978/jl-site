@@ -1,5 +1,9 @@
-import { ReactNode } from "react";
+import Logo from "@/components/three/logo";
 
 export default function Root() {
-  return <div>Main</div>;
+  return (
+    <div className="w-full h-full">
+      <Logo />
+    </div>
+  );
 }
