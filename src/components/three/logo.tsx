@@ -23,13 +23,14 @@ export function Model(props: Logo3DProps) {
       ref.current.rotation.y = 0;
     }
   };
+  const LogoMesh = nodes.Logo as any;
   return (
     <group {...props} dispose={null}>
       <mesh
         ref={ref}
         castShadow
         receiveShadow
-        geometry={nodes.Logo.geometry}
+        geometry={LogoMesh.geometry}
         material={materials["Material.001"]}
         rotation={[Math.PI / 2, 0, 0]}
         // onPointerOut={ResetPosition}
