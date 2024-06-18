@@ -34,7 +34,7 @@ const Logo = () => {
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} /> */}
 
-      <group position={[0, -0.5, 0]} rotation={[0, 0, 0]}>
+      <group position={[0, 0, 0]} rotation={[0, 0, 0]}>
         <Scene />
         {/* <AccumulativeShadows
           frames={100}
@@ -62,7 +62,7 @@ const Logo = () => {
 export function Scene(props: any) {
   const { nodes, materials } = useGLTF("/models/Logo.glb");
   useGLTF.preload("/models/Logo.glb");
-  const [Clear, setClear] = useState(true);
+  const [Clear, setClear] = useState(false);
   // const ref = useRef<Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[], Object3DEventMap> | null>(
   //   null
   // );
