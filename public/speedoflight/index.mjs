@@ -11,7 +11,7 @@ const Gray = "rgba(20, 20, 20, 1)";
 
 const MaxRows = 5;
 const MaxCols = 6;
-let Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
+let Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.4 : (playAreaH / (MaxRows + 1)) * 0.4;
 
 const ButtonW = 200;
 const ButtonH = 40;

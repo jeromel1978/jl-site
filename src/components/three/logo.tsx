@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
 import type { Mesh, BufferGeometry, NormalBufferAttributes, Material, Object3DEventMap, Group } from "three";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import { Text } from "troika-three-text";
 // import Hel from "three/examples/fonts/helvetiker_regular.typeface.json";
 import {
   useGLTF,
@@ -19,7 +19,7 @@ import {
 } from "@react-three/drei";
 import { easing } from "maath";
 
-const TitleFont = "/fonts/helvetiker_regular.typeface.json";
+const myText = new Text();
 const Logo = () => {
   const [perfSucks, degrade] = useState(false);
   return (
@@ -72,23 +72,6 @@ export function Scene(props: any) {
   //   console.log(TitleGeo);
   // }, [TitleGeo]);
 
-  const loader = new FontLoader();
-  loader.load(TitleFont, (font) => {
-    if (!TitleGeo)
-      setTitleGeo(
-        new TextGeometry("Jerome Losorata", {
-          font: font,
-          size: 80,
-          depth: 5,
-          curveSegments: 12,
-          bevelEnabled: true,
-          bevelThickness: 10,
-          bevelSize: 8,
-          bevelOffset: 0,
-          bevelSegments: 5,
-        })
-      );
-  });
   const [Clear, setClear] = useState(false);
   // const ref = useRef<Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[], Object3DEventMap> | null>(
   //   null
