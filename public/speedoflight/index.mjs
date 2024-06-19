@@ -8,7 +8,10 @@ let Points = 0;
 
 const Green = "rgba(0, 255, 0, 1)";
 const Gray = "rgba(20, 20, 20, 1)";
-const Rad = 50;
+
+const MaxRows = 5;
+const MaxCols = 6;
+const Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
 
 const ButtonW = 200;
 const ButtonH = 40;
@@ -71,6 +74,12 @@ const Game = () => {
   playAreaH = document.body.clientHeight;
   canvas.style.position = "absolute";
   document.body.appendChild(canvas);
+  document.addEventListener("resize", (event) => {
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+    playAreaW = document.body.clientWidth;
+    playAreaH = document.body.clientHeight;
+  });
 };
 
 const MakeBox = () => {
