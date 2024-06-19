@@ -1,8 +1,11 @@
 "use client";
 import * as THREE from "three";
-import React, { useRef, useState, useLayoutEffect } from "react";
+import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
 import type { Mesh, BufferGeometry, NormalBufferAttributes, Material, Object3DEventMap, Group } from "three";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+// import Hel from "three/examples/fonts/helvetiker_regular.typeface.json";
 import {
   useGLTF,
   Center,
@@ -16,6 +19,7 @@ import {
 } from "@react-three/drei";
 import { easing } from "maath";
 
+const TitleFont = "/fonts/helvetiker_regular.typeface.json";
 const Logo = () => {
   const [perfSucks, degrade] = useState(false);
   return (
@@ -61,7 +65,30 @@ const Logo = () => {
 
 export function Scene(props: any) {
   const { nodes, materials } = useGLTF("/models/Logo.glb");
+  const [TitleGeo, setTitleGeo] = useState<TextGeometry | undefined>();
   useGLTF.preload("/models/Logo.glb");
+
+  // useEffect(() => {
+  //   console.log(TitleGeo);
+  // }, [TitleGeo]);
+
+  const loader = new FontLoader();
+  loader.load(TitleFont, (font) => {
+    if (!TitleGeo)
+      setTitleGeo(
+        new TextGeometry("Jerome Losorata", {
+          font: font,
+          size: 80,
+          depth: 5,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 10,
+          bevelSize: 8,
+          bevelOffset: 0,
+          bevelSegments: 5,
+        })
+      );
+  });
   const [Clear, setClear] = useState(false);
   // const ref = useRef<Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[], Object3DEventMap> | null>(
   //   null
@@ -88,48 +115,83 @@ export function Scene(props: any) {
   const LogoMesh = nodes.Logo as any;
   return (
     <group {...props} dispose={null}>
-      {!Clear && (
+      {!!TitleGeo && (
+        <mesh
+          visible
+          position={[0, 0, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+          material={innerMaterial}
+          scale={[0.5, 0.5, 0.5]}
+          geometry={TitleGeo}
+        ></mesh>
+      )}
+      <mesh
+        visible
+        position={[0.5, 0.5, -4]}
+        rotation={[Math.PI / 2, 0, 0]}
+        material={innerMaterial}
+        scale={[0.5, 0.5, 0.5]}
+      >
+        <sphereGeometry args={[1, 128, 128]} />
+      </mesh>
+      <mesh
+        visible
+        position={[-0.75, -0.5, -2]}
+        rotation={[Math.PI / 2, 0, 0]}
+        material={innerMaterial}
+        scale={[0.25, 0.25, 0.25]}
+      >
+        <sphereGeometry args={[1, 64, 64]} />
+      </mesh>
+      <mesh
+        visible
+        position={[0.75, -0.35, -1]}
+        rotation={[Math.PI / 2, 0, 0]}
+        material={innerMaterial}
+        scale={[0.1, 0.1, 0.1]}
+      >
+        <sphereGeometry args={[1, 64, 64]} />
+      </mesh>
+      <mesh
+        visible={!Clear}
+        castShadow
+        receiveShadow
+        geometry={LogoMesh.geometry}
+        // material={materials["Material.001"]}
+        material={innerMaterial}
+        rotation={[Math.PI / 2, 0, 0]}
+        // onPointerOut={ResetPosition}
+        onClick={() => setClear(!Clear)}
+      ></mesh>
+      <Caustics
+        visible={!!Clear}
+        color={[1, 0.8, 0.8]}
+        lightSource={[-1.2, 3, -2]}
+        intensity={0.003}
+        worldRadius={0.26 / 10}
+        ior={0.9}
+        causticsOnly={false}
+        backside={true}
+      >
         <mesh
           castShadow
           receiveShadow
           geometry={LogoMesh.geometry}
-          // material={materials["Material.001"]}
-          material={innerMaterial}
           rotation={[Math.PI / 2, 0, 0]}
-          // onPointerOut={ResetPosition}
           onClick={() => setClear(!Clear)}
-        />
-      )}
-      {Clear && (
-        <Caustics
-          color={[1, 0.8, 0.8]}
-          lightSource={[-1.2, 3, -2]}
-          intensity={0.003}
-          worldRadius={0.26 / 10}
-          ior={0.9}
-          causticsOnly={false}
-          backside={true}
         >
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={LogoMesh.geometry}
-            rotation={[Math.PI / 2, 0, 0]}
-            onClick={() => setClear(!Clear)}
-          >
-            <MeshTransmissionMaterial
-              backside
-              backsideThickness={0.1}
-              thickness={0.05}
-              chromaticAberration={0.05}
-              anisotropicBlur={1}
-              clearcoat={1}
-              clearcoatRoughness={1}
-              envMapIntensity={2}
-            />
-          </mesh>
-        </Caustics>
-      )}
+          <MeshTransmissionMaterial
+            backside
+            backsideThickness={0.1}
+            thickness={0.05}
+            chromaticAberration={0.05}
+            anisotropicBlur={1}
+            clearcoat={1}
+            clearcoatRoughness={1}
+            envMapIntensity={2}
+          />
+        </mesh>
+      </Caustics>
     </group>
   );
 }
