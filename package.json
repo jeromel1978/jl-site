@@ -11,6 +11,7 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@react-three/drei": "^9.107.0",
     "@react-three/fiber": "^8.16.8",
     "@teamhanko/passkeys-next-auth-provider": "^0.3.1",
