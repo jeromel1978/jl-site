@@ -12,7 +12,7 @@ const Blog = async ({ params }: BlogParams) => {
     <div className="flex flex-col gap-4 p-2">
       <h1 className="flex font-extrabold text-3xl w-full justify-center">{params.id}'s Blog</h1>
       {Posts.map((Post) => (
-        <Card>
+        <Card key={`${Post.user}${Post.id}`}>
           <CardHeader>
             <CardTitle>{Post.title}</CardTitle>
             <CardDescription>
