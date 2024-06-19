@@ -11,7 +11,7 @@ const Gray = "rgba(20, 20, 20, 1)";
 
 const MaxRows = 5;
 const MaxCols = 6;
-const Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
+let Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
 
 const ButtonW = 200;
 const ButtonH = 40;
@@ -79,6 +79,7 @@ const Game = () => {
     canvas.height = document.body.clientHeight;
     playAreaW = document.body.clientWidth;
     playAreaH = document.body.clientHeight;
+    Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
   });
 };
 
