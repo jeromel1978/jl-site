@@ -25,32 +25,21 @@ let TargetCenters = [];
 
 const isIntersect = (point, circle) => {
   const hit = Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2);
-  // console.log(hit);
   return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < Rad;
 };
 
-const Pressed = (e) => {
-  // console.log("Pressed", e);
-  const point = {
-    x: e.layerX,
-    y: e.layerY,
-  };
+const ProcessPoint = (point) => {
   if (Running)
     TargetCenters.forEach((Row, RowI) => {
       Row.forEach((Col, ColI) => {
         const x = (playAreaW / (Row.length + 1)) * (ColI + 1);
         const y = (playAreaH / (Targets.length + 1)) * (RowI + 1);
-        // console.log(point, Col);
-        // MakeButton({ x: x, y: y, target: Col });
         if (isIntersect(point, Col)) {
-          // console.log(`click on circle: ${RowI} ${ColI}`);
           if (Targets[RowI][ColI].getOn()) {
-            console.log("good");
             Points += 10;
             Targets[RowI][ColI].setOn(0);
           } else {
             Points -= 10;
-            console.log("bad");
           }
         }
       });
@@ -66,6 +55,18 @@ const Pressed = (e) => {
     Start();
   }
 };
+const Pointer = (e) => {
+  ProcessPoint({
+    x: e.layerX,
+    y: e.layerY,
+  });
+};
+const Touch = (e) => {
+  e.touches.forEach((touch) => {
+    ProcessPoint({ x: touch.clientX, y: clientY });
+  });
+};
+
 const RedefineLayout = () => {
   canvas.width = document.body.clientWidth;
   canvas.height = document.body.clientHeight;
@@ -76,8 +77,8 @@ const RedefineLayout = () => {
 };
 const Game = () => {
   canvas = document.createElement("canvas");
-  canvas.addEventListener("pointerdown", Pressed);
-  canvas.addEventListener("touchstart", Pressed);
+  canvas.addEventListener("pointerdown", Pointer);
+  canvas.addEventListener("touchstart", Touch);
   canvas.id = "GameLayer";
   canvas.width = canvas.width;
   canvas.height = canvas.height;
@@ -133,8 +134,6 @@ const MakeMessage = () => {
 
 const MakeButton = ({ x, y, target }) => {
   ctx = canvas.getContext("2d");
-  // console.log(target);
-  // if (!target.getOn) console.log(x, y, target);
   ctx.fillStyle = target.getOn() ? Green : Gray;
   ctx.beginPath();
   ctx.arc(x, y, Rad, 0, 2 * Math.PI);
@@ -149,7 +148,6 @@ const MakeButtons = () => {
       const x = (playAreaW / (Row.length + 1)) * (ColI + 1);
       const y = (playAreaH / (Targets.length + 1)) * (RowI + 1) + TextSize * 2;
       if (TargetCenters[RowI].length < ColI + 1) TargetCenters[RowI].push({ x: x, y: y });
-      // console.log(ColI, RowI, x, y);
       MakeButton({ x: x, y: y, target: Col });
     });
   });
@@ -185,5 +183,5 @@ const Animate = () => {
 };
 
 Game();
-SpeedOfLight(5, 6, 1, 10);
+SpeedOfLight(5, 6, 3, 10);
 Animate();
