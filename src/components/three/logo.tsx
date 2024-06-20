@@ -19,7 +19,13 @@ import {
 } from "@react-three/drei";
 import { easing } from "maath";
 
-const myText = new Text();
+// const myText = new Text();
+// myText.text = "Hello world!";
+// myText.fontSize = 0.2;
+// myText.position.z = -2;
+// myText.color = 0x9966ff;
+// myText.sync();
+
 const Logo = () => {
   const [perfSucks, degrade] = useState(false);
   return (
@@ -238,5 +244,11 @@ function Env({ perfSucks }: { perfSucks: boolean }) {
     </Environment>
   );
 }
+// const Title = new Text();
+// Title.text = "Hello world!";
+// Title.fontSize = 0.2;
+// Title.position.z = -2;
+// Title.color = 0x9966ff;
+// Scene.add
 
 export default Logo;

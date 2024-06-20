@@ -1,21 +1,25 @@
-import { SpeedOfLight, Start, Targets, Message } from "./speedoflight.mjs";
-
-let canvas;
-let ctx;
-let playAreaW = document.body.clientWidth;
-let playAreaH = document.body.clientHeight;
-let Points = 0;
+import { SpeedOfLight, Start, Targets, Message, Running } from "./speedoflight.mjs";
 
 const Green = "rgba(0, 255, 0, 1)";
 const Gray = "rgba(20, 20, 20, 1)";
-
+const LSHighScore = "HighScore";
 const MaxRows = 5;
 const MaxCols = 6;
-let Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.4 : (playAreaH / (MaxRows + 1)) * 0.4;
+const StartButtonText = "Start";
 
-const ButtonW = 200;
-const ButtonH = 40;
-const TextSize = 30;
+let canvas;
+let ctx;
+let TextSize = 30;
+let ButtonW = 200;
+let ButtonH = 40;
+let playAreaX = 0;
+let playAreaY = TextSize * 2;
+let playAreaW = document.body.clientWidth;
+let playAreaH = document.body.clientHeight - TextSize * 2;
+let Points = 0;
+let HighScore = parseInt(localStorage.getItem(LSHighScore) ?? "0");
+
+let Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.4 : (playAreaH / (MaxRows + 1)) * 0.4;
 
 let TargetCenters = [];
 
@@ -31,88 +35,93 @@ const Pressed = (e) => {
     x: e.layerX,
     y: e.layerY,
   };
-
-  TargetCenters.forEach((Row, RowI) => {
-    Row.forEach((Col, ColI) => {
-      const x = (playAreaW / (Row.length + 1)) * (ColI + 1);
-      const y = (playAreaH / (Targets.length + 1)) * (RowI + 1);
-      // console.log(point, Col);
-      // MakeButton({ x: x, y: y, target: Col });
-      if (isIntersect(point, Col)) {
-        console.log(`click on circle: ${RowI} ${ColI}`);
-        if (Targets[RowI][ColI].getOn()) {
-          console.log("good");
-          Points += 10;
-          Targets[RowI][ColI].setOn(0);
-        } else {
-          Points -= 10;
-          console.log("bad");
+  if (Running)
+    TargetCenters.forEach((Row, RowI) => {
+      Row.forEach((Col, ColI) => {
+        const x = (playAreaW / (Row.length + 1)) * (ColI + 1);
+        const y = (playAreaH / (Targets.length + 1)) * (RowI + 1);
+        // console.log(point, Col);
+        // MakeButton({ x: x, y: y, target: Col });
+        if (isIntersect(point, Col)) {
+          // console.log(`click on circle: ${RowI} ${ColI}`);
+          if (Targets[RowI][ColI].getOn()) {
+            console.log("good");
+            Points += 10;
+            Targets[RowI][ColI].setOn(0);
+          } else {
+            Points -= 10;
+            console.log("bad");
+          }
         }
-      }
+      });
     });
-  });
-  //(playAreaW - ButtonW) / 2, (playAreaH - ButtonH) / 2, ButtonW, ButtonH
   if (
+    !Running &&
     (canvas.width - ButtonW) / 2 < point.x &&
     point.x < (canvas.width - ButtonW) / 2 + ButtonW &&
-    canvas.height - ButtonH * 1.5 < point.y &&
-    point.y < canvas.height - ButtonH * 1.5 + ButtonH
+    TextSize * 0.75 < point.y &&
+    point.y < TextSize * 0.75 + ButtonH
   ) {
     Points = 0;
     Start();
   }
 };
-
+const RedefineLayout = () => {
+  canvas.width = document.body.clientWidth;
+  canvas.height = document.body.clientHeight;
+  TextSize = canvas.width > 600 ? canvas.width / 50 : 12;
+  playAreaW = canvas.width;
+  playAreaH = canvas.height - TextSize * 2;
+  Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.4 : (playAreaH / (MaxRows + 1)) * 0.4;
+};
 const Game = () => {
   canvas = document.createElement("canvas");
   canvas.addEventListener("pointerdown", Pressed);
   canvas.addEventListener("touchstart", Pressed);
   canvas.id = "GameLayer";
-  canvas.width = document.body.clientWidth;
-  canvas.height = document.body.clientHeight;
-  playAreaW = document.body.clientWidth;
-  playAreaH = document.body.clientHeight;
+  canvas.width = canvas.width;
+  canvas.height = canvas.height;
+  playAreaW = canvas.width;
+  playAreaH = canvas.height - TextSize * 2;
   canvas.style.position = "absolute";
   document.body.appendChild(canvas);
-  document.addEventListener("resize", (event) => {
-    canvas.width = document.body.clientWidth;
-    canvas.height = document.body.clientHeight;
-    playAreaW = document.body.clientWidth;
-    playAreaH = document.body.clientHeight;
-    Rad = playAreaW < playAreaH ? (playAreaW / (MaxCols + 1)) * 0.75 : (playAreaH / (MaxRows + 1)) * 0.75;
-  });
+  // document.body.addEventListener("resize", RedefineLayout);
+  // document.addEventListener("orientationchange", RedefineLayout);
+  window.addEventListener("resize", console.log("Resized"));
+  window.addEventListener("orientationchange", console.log("Orientation"));
+  RedefineLayout();
 };
 
-const MakeBox = () => {
+const BlackOutScoreLine = () => {
   ctx = canvas.getContext("2d");
-  // console.log("ctx", ctx);
-  // ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
-  // ctx.fillRect(100, 100, 200, 200);
-  // ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
-  // ctx.fillRect(150, 150, 200, 200);
-  // ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
-  // ctx.fillRect(200, 50, 200, 200);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, TextSize / 2, canvas.width, TextSize * 2);
 };
 
-const FillBackground = () => {
-  ctx.FillBackground("black");
+const MakeHighScore = () => {
+  ctx = canvas.getContext("2d");
+  ctx.fillStyle = "gold";
+  ctx.font = `bold ${TextSize}px Arial`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText(HighScore, 3 * TextSize, TextSize * 1.5);
 };
 
 const MakePoints = () => {
   ctx = canvas.getContext("2d");
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, TextSize, canvas.width, TextSize * 2);
   ctx.fillStyle = "blue";
   ctx.font = `bold ${TextSize}px Arial`;
-  ctx.textAlign = "center";
+  ctx.textAlign = "right";
   ctx.textBaseline = "middle";
-  ctx.fillText(Points, canvas.width / 2, TextSize * 1.5);
+  ctx.fillText(Points, canvas.width - 3 * TextSize, TextSize * 1.5);
 };
-const BlankMessage = () => {
+
+const BlackOutMessage = () => {
   ctx = canvas.getContext("2d");
   ctx.fillStyle = "black";
-  ctx.fillRect(0, canvas.height / 2 - TextSize, canvas.width, canvas.height / 2 + TextSize);
+  ctx.fillRect(0, canvas.height / 2 - TextSize, canvas.width, TextSize * 2);
 };
+
 const MakeMessage = () => {
   ctx = canvas.getContext("2d");
   ctx.fillStyle = "red";
@@ -138,7 +147,7 @@ const MakeButtons = () => {
     if (TargetCenters.length < RowI + 1) TargetCenters.push([]);
     Row.forEach((Col, ColI) => {
       const x = (playAreaW / (Row.length + 1)) * (ColI + 1);
-      const y = (playAreaH / (Targets.length + 1)) * (RowI + 1);
+      const y = (playAreaH / (Targets.length + 1)) * (RowI + 1) + TextSize * 2;
       if (TargetCenters[RowI].length < ColI + 1) TargetCenters[RowI].push({ x: x, y: y });
       // console.log(ColI, RowI, x, y);
       MakeButton({ x: x, y: y, target: Col });
@@ -147,28 +156,34 @@ const MakeButtons = () => {
 };
 
 const MakeStartButton = () => {
+  ButtonH = TextSize * 1.5;
+  ButtonW = StartButtonText.length * TextSize;
   ctx = canvas.getContext("2d");
   ctx.fillStyle = Green;
-  ctx.fillRect((canvas.width - ButtonW) / 2, canvas.height - ButtonH * 1.5, ButtonW, ButtonH);
+  ctx.fillRect((canvas.width - ButtonW) / 2, TextSize * 0.75, ButtonW, ButtonH);
   ctx.fillStyle = "black";
   ctx.font = `bold ${TextSize}px Arial`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Start", canvas.width / 2, canvas.height - ButtonH * 1.5 + ButtonH * 0.5);
+  ctx.fillText(StartButtonText, canvas.width / 2, TextSize * 0.75 + ButtonH * 0.5);
 };
 
 const Animate = () => {
-  // FillBackground();
-  BlankMessage();
+  RedefineLayout();
+  BlackOutScoreLine();
+  BlackOutMessage();
+  MakeHighScore();
   MakePoints();
-  MakeStartButton();
+  if (!Running) MakeStartButton();
+  if (Points > HighScore) {
+    localStorage.setItem(LSHighScore, Points.toString());
+    HighScore = Points;
+  }
   MakeButtons();
   if (!!Message) MakeMessage();
-  // MakeBox();
-  // Start();
   window.requestAnimationFrame(Animate);
 };
 
 Game();
-SpeedOfLight(5, 6, 3, 10);
+SpeedOfLight(5, 6, 1, 10);
 Animate();

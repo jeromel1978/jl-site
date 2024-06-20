@@ -111,6 +111,7 @@ const SetRounds = () => {
 
 export let Message = "";
 export let currentRound = 0;
+export let Running = false;
 
 export let Targets = [];
 
@@ -137,9 +138,14 @@ const ExecuteRound = (Round) => {
     setTimeout(() => {
       ExecuteRound(Round + 1);
     }, Rounds[Round].time * 1000);
+  else
+    setTimeout(() => {
+      Running = false;
+    }, Rounds[Round].time * 1000);
 };
 
 export const Start = () => {
+  Running = true;
   SetRounds();
   ExecuteRound(0);
 };
