@@ -4,7 +4,6 @@ import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
 import type { Mesh, BufferGeometry, NormalBufferAttributes, Material, Object3DEventMap, Group } from "three";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { Text } from "troika-three-text";
 // import Hel from "three/examples/fonts/helvetiker_regular.typeface.json";
 import {
   useGLTF,
@@ -16,6 +15,7 @@ import {
   PerformanceMonitor,
   AccumulativeShadows,
   MeshTransmissionMaterial,
+  Text,
 } from "@react-three/drei";
 import { easing } from "maath";
 
@@ -114,6 +114,34 @@ export function Scene(props: any) {
           geometry={TitleGeo}
         ></mesh>
       )}
+
+      <Text
+        position={[0, 1.5, 1]}
+        fontSize={0.5}
+        color="red"
+        anchorX="center"
+        anchorY="middle"
+        fillOpacity={1}
+        textAlign="center"
+        material={innerMaterial}
+      >
+        {`Jerome Losorata`}
+      </Text>
+      <Text
+        position={[-2, -1, 1]}
+        fontSize={0.5}
+        color="red"
+        anchorX="center"
+        anchorY="middle"
+        fillOpacity={1}
+        textAlign="center"
+        material={innerMaterial}
+        onClick={() => (document.location = "/blog")}
+        // className={`cursor-pointer`}
+        // style={{cursor:"pointer"}}
+      >
+        {`Blog`}
+      </Text>
       <mesh
         visible
         position={[0.5, 0.5, -4]}
