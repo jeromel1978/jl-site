@@ -72,6 +72,8 @@ const Logo = () => {
 export function Scene(props: any) {
   const { nodes, materials } = useGLTF("/models/Logo.glb");
   const [TitleGeo, setTitleGeo] = useState<TextGeometry | undefined>();
+  const [BlogHover, setBlogHover] = useState<boolean>(false);
+  const [Shavian, setShavian] = useState<boolean>(false);
   useGLTF.preload("/models/Logo.glb");
 
   // useEffect(() => {
@@ -130,17 +132,32 @@ export function Scene(props: any) {
       <Text
         position={[-2, -1, 1]}
         fontSize={0.5}
-        color="red"
+        color={BlogHover ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
         anchorY="middle"
         fillOpacity={1}
         textAlign="center"
         material={innerMaterial}
         onClick={() => (document.location = "/blog")}
-        // className={`cursor-pointer`}
-        // style={{cursor:"pointer"}}
+        onPointerEnter={() => setBlogHover(true)}
+        onPointerLeave={() => setBlogHover(false)}
       >
         {`Blog`}
+      </Text>
+      <Text
+        position={[2, -1, 1]}
+        fontSize={0.5}
+        color={Shavian ? "#FFAAAA" : "#FF0000"}
+        anchorX="center"
+        anchorY="middle"
+        fillOpacity={1}
+        textAlign="center"
+        material={innerMaterial}
+        onClick={() => (document.location = "/shavian")}
+        onPointerEnter={() => setShavian(true)}
+        onPointerLeave={() => setShavian(false)}
+      >
+        {`Shavian`}
       </Text>
       <mesh
         visible
