@@ -74,6 +74,7 @@ export function Scene(props: any) {
   const [TitleGeo, setTitleGeo] = useState<TextGeometry | undefined>();
   const [BlogHover, setBlogHover] = useState<boolean>(false);
   const [Shavian, setShavian] = useState<boolean>(false);
+  const [SpeedOfLight, setSpeedOfLight] = useState<boolean>(false);
   useGLTF.preload("/models/Logo.glb");
 
   // useEffect(() => {
@@ -130,7 +131,7 @@ export function Scene(props: any) {
         {`Jerome Losorata`}
       </Text>
       <Text
-        position={[-2, -1, 1]}
+        position={[-2, 0, 1]}
         fontSize={0.5}
         color={BlogHover ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
@@ -145,7 +146,7 @@ export function Scene(props: any) {
         {`Blog`}
       </Text>
       <Text
-        position={[2, -1, 1]}
+        position={[2, 0, 1]}
         fontSize={0.5}
         color={Shavian ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
@@ -158,6 +159,21 @@ export function Scene(props: any) {
         onPointerLeave={() => setShavian(false)}
       >
         {`Shavian`}
+      </Text>
+      <Text
+        position={[0, -1.5, 0]}
+        fontSize={0.5}
+        color={SpeedOfLight ? "#FFAAAA" : "#FF0000"}
+        anchorX="center"
+        anchorY="middle"
+        fillOpacity={1}
+        textAlign="center"
+        material={innerMaterial}
+        onClick={() => (document.location = "/speedoflight/index.html")}
+        onPointerEnter={() => setSpeedOfLight(true)}
+        onPointerLeave={() => setSpeedOfLight(false)}
+      >
+        {`Speed Of Light`}
       </Text>
       <mesh
         visible
