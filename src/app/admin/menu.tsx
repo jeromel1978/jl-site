@@ -8,7 +8,7 @@ import type { PostData } from "@/lib/upstash";
 const Menu = () => {
   return (
     <div>
-      <Button onClick={() => (document.location = "./list")}>List</Button>
+      <Button onClick={() => (document.location = "admin/list")}>List</Button>
       <Button onClick={() => signOut()}>Sign Out</Button>
     </div>
   );
