@@ -19,3 +19,10 @@ export const GetPosts = async (User: string) => {
   }
   return Posts;
 };
+
+export const DeletePost = async (Data: PostData) => {
+  const client = await Connect();
+  const hset = await client.hdel(`${Category.BlogPost}:${Data.id}`);
+  const sdel = await client.srem(`${Category.BlogUserPost}:${Data.user}`, Data.id);
+  return true;
+};
