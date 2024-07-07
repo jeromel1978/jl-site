@@ -1,6 +1,6 @@
 "use client";
 import * as THREE from "three";
-import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo, useLayoutEffect } from "react";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
 import type { Mesh, BufferGeometry, NormalBufferAttributes, Material, Object3DEventMap, Group } from "three";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
@@ -25,6 +25,8 @@ import { easing } from "maath";
 // myText.position.z = -2;
 // myText.color = 0x9966ff;
 // myText.sync();
+
+const OrientationModifier = (Size: number) => (screen.orientation.type.includes("landscape") ? Size : Size / 3);
 
 const Logo = () => {
   const [perfSucks, degrade] = useState(false);
@@ -76,6 +78,7 @@ export function Scene(props: any) {
   const [Shavian, setShavian] = useState<boolean>(false);
   const [SpeedOfLight, setSpeedOfLight] = useState<boolean>(false);
   useGLTF.preload("/models/Logo.glb");
+  const Portrait = useMemo(() => screen.orientation.type.includes("portrait"), []);
 
   // useEffect(() => {
   //   console.log(TitleGeo);
@@ -113,14 +116,14 @@ export function Scene(props: any) {
           position={[0, 0, 0]}
           rotation={[Math.PI / 2, 0, 0]}
           material={innerMaterial}
-          scale={[0.5, 0.5, 0.5]}
+          scale={Portrait ? [0.4, 0.4, 0.4] : [0.5, 0.5, 0.5]}
           geometry={TitleGeo}
         ></mesh>
       )}
 
       <Text
         position={[0, 1.5, 1]}
-        fontSize={0.5}
+        fontSize={OrientationModifier(0.5)}
         color="red"
         anchorX="center"
         anchorY="middle"
@@ -131,8 +134,8 @@ export function Scene(props: any) {
         {`Jerome Losorata`}
       </Text>
       <Text
-        position={[-2, 0, 1]}
-        fontSize={0.5}
+        position={Portrait ? [0, 0.75, 2] : [-2, 0, 1]}
+        fontSize={OrientationModifier(0.5)}
         color={BlogHover ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
         anchorY="middle"
@@ -146,8 +149,8 @@ export function Scene(props: any) {
         {`Blog`}
       </Text>
       <Text
-        position={[2, 0, 1]}
-        fontSize={0.5}
+        position={Portrait ? [0, -0.5, 2] : [2, 0, 1]}
+        fontSize={OrientationModifier(0.5)}
         color={Shavian ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
         anchorY="middle"
@@ -162,7 +165,7 @@ export function Scene(props: any) {
       </Text>
       <Text
         position={[0, -1.5, 0]}
-        fontSize={0.5}
+        fontSize={OrientationModifier(0.5)}
         color={SpeedOfLight ? "#FFAAAA" : "#FF0000"}
         anchorX="center"
         anchorY="middle"
@@ -206,6 +209,7 @@ export function Scene(props: any) {
         visible={!Clear}
         castShadow
         receiveShadow
+        scale={Portrait ? [0.4, 0.4, 0.4] : [0.5, 0.5, 0.5]}
         geometry={LogoMesh.geometry}
         // material={materials["Material.001"]}
         material={innerMaterial}
@@ -227,6 +231,7 @@ export function Scene(props: any) {
           castShadow
           receiveShadow
           geometry={LogoMesh.geometry}
+          scale={Portrait ? [0.4, 0.4, 0.4] : [0.5, 0.5, 0.5]}
           rotation={[Math.PI / 2, 0, 0]}
           onClick={() => setClear(!Clear)}
         >
